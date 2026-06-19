@@ -4,12 +4,7 @@ import {ValidationModalInterface} from './validation-modal-interface';
 
 export interface CreatingBranchSettingsInterface {
 	taskCode: string;
-	branchType: BranchType;
-}
-
-export enum BranchType {
-	docs = 'docs',
-	catch = 'catch'
+	branchType: string;
 }
 
 export default class CreatingBranchModal extends Modal {
@@ -21,11 +16,11 @@ export default class CreatingBranchModal extends Modal {
 	constructor(app: App, onSubmit: (result: CreatingBranchSettingsInterface) => void) {
 		super(app);
 		this.onSubmit = onSubmit;
+		this.backend = Backend.getInstance();
 		this.values = {
 			taskCode: '',
-			branchType: BranchType.docs
+			branchType: this.backend.plugin.settings.branchTypes[0]?.value ?? ''
 		};
-		this.backend = Backend.getInstance();
 	}
 
 	onOpen() {
@@ -33,13 +28,13 @@ export default class CreatingBranchModal extends Modal {
 
 		contentEl.createEl("h1", { text: "Creating a new branch" });
 
-		contentEl.createEl("h6", { text: "WARN: Inheritance from the current branch: " + this.backend.gitWrapper.getBranchNameSync()});
+		contentEl.createEl("h6", { text: "Inheritance from the current branch: " + this.backend.gitWrapper.getBranchNameSync()});
 
 		new Setting(contentEl)
-			.setName("Jira task code")
+			.setName("Issue key")
 			.addText((text) =>
 				text
-					.setPlaceholder('CRM-XXXX')
+					.setPlaceholder('KEY-1234')
 					.onChange((value) => {
 						this.values.taskCode = value;
 					})
@@ -49,10 +44,12 @@ export default class CreatingBranchModal extends Modal {
 		new Setting(contentEl)
 			.setName("Branch Type")
 			.addDropdown((dropdown) => {
+				this.backend.plugin.settings.branchTypes.forEach((branchType) => {
+					dropdown.addOption(branchType.value, `[${branchType.value}]: ${branchType.label}`);
+				});
 				dropdown
-					.addOption(BranchType.docs, "[Docs] - Новая функциональность")
-					.addOption(BranchType.catch, "[Catch] - Тех. долг")
-					.onChange((value: BranchType) => {
+					.setValue(this.values.branchType)
+					.onChange((value) => {
 						this.values.branchType = value; // Сохраняем выбранное значение
 					});
 				dropdown.selectEl.addClass("task-type-dropdown");
@@ -77,7 +74,7 @@ export default class CreatingBranchModal extends Modal {
 		const errors = [];
 
 		if (!this.values.taskCode) {
-			errors.push("Field 'Jira Task Code' is required");
+			errors.push("Field 'Issue key' is required");
 		}
 
 		if (!this.values.branchType) {

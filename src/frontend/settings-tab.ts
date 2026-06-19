@@ -1,12 +1,22 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import ObsidianSimpleGitPlugin from "../../main";
 
-export interface ObsidianSimpleGitPluginSettingsInterface {
+export interface BranchTypeOption {
+	value: string;
+	label: string;
+}
 
+export interface ObsidianSimpleGitPluginSettingsInterface {
+	branchTypes: BranchTypeOption[];
 }
 
 export const DEFAULT_SETTINGS: ObsidianSimpleGitPluginSettingsInterface = {
-
+	branchTypes: [
+		{ value: 'feature', label: 'New functionality' },
+		{ value: 'docs', label: 'Documentation' },
+		{ value: 'release', label: 'Release preparation' },
+		{ value: 'hotfix', label: 'Urgent production fix' },
+	],
 }
 
 export default class SettingsTab extends PluginSettingTab {
@@ -20,6 +30,46 @@ export default class SettingsTab extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
+
+		new Setting(containerEl).setName('Branch types').setHeading();
+
+		this.plugin.settings.branchTypes.forEach((branchType, index) => {
+			new Setting(containerEl)
+				.addText(text => text
+					.setPlaceholder('docs')
+					.setValue(branchType.value)
+					.onChange(async (value) => {
+						this.plugin.settings.branchTypes[index].value = value;
+						await this.plugin.saveSettings();
+					}))
+				.addText(text => text
+					.setPlaceholder('Documentation')
+					.setValue(branchType.label)
+					.onChange(async (value) => {
+						this.plugin.settings.branchTypes[index].label = value;
+						await this.plugin.saveSettings();
+					}))
+				.addExtraButton(button => button
+					.setIcon('trash')
+					.setTooltip('Remove branch type')
+					.onClick(async () => {
+						this.plugin.settings.branchTypes.splice(index, 1);
+						await this.plugin.saveSettings();
+						this.display();
+					}));
+		});
+
+		new Setting(containerEl)
+			.addButton(button => button
+				.setButtonText('Add branch type')
+				.setCta()
+				.onClick(async () => {
+					this.plugin.settings.branchTypes.push({ value: '', label: '' });
+					await this.plugin.saveSettings();
+					this.display();
+				}));
+
+		new Setting(containerEl).setName('Environment').setHeading();
 
 		new Setting(containerEl)
 			.setName('Path')
