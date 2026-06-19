@@ -138,7 +138,7 @@ export default class GitWrapper {
 		try {
 			new Notice('Switching to branch: ' + branchName);
 			await this.git.checkout(branchName);
-			const message = 'Switched to branch: ';
+			const message = 'Switched to branch: ' + branchName;
 			new Notice(message);
 			console.log(message);
 		} catch (error) {
