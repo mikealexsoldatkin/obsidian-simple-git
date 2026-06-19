@@ -32,6 +32,18 @@ export default class CommittingSettingsModal extends Modal {
 		contentEl.createEl("h1", { text: this.title });
 
 		new Setting(contentEl)
+			.setName("Auto staging")
+			.setDesc("Stage all files before committing")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.values.autoStaging)
+					.onChange((value) => {
+						this.values.autoStaging = value;
+						this.backend.saveAutoStaging(value);
+					})
+			);
+
+		new Setting(contentEl)
 			.setName("Changes")
 			.addTextArea((textarea) =>
 				textarea
@@ -41,19 +53,6 @@ export default class CommittingSettingsModal extends Modal {
 						this.values.commitMessage = value;
 					})
 					.inputEl.addClass("commit-description-input")
-			);
-
-		new Setting(contentEl)
-			.setName("Auto staging")
-			.setDesc("Stage all files before committing")
-			.addToggle((toggle) =>
-				toggle
-					.setValue(this.values.autoStaging)
-					.setDisabled(true)
-					.onChange((value) => {
-						this.values.autoStaging = value;
-						this.backend.saveAutoStaging(value);
-					})
 			);
 
 		new Setting(contentEl)

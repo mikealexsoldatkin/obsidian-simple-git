@@ -1,6 +1,6 @@
 {
 	"id": "obsidian-simple-git-plugin",
-	"name": "Obsidian Simple Git Plugin",
+	"name": "Simple Git",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "A lightweight and simple git client",

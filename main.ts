@@ -1,4 +1,4 @@
-import {Plugin, TFile} from 'obsidian';
+import {Plugin} from 'obsidian';
 import CreatingBranchModal from './src/frontend/creating-branch-modal';
 import CommittingSettingsModal from './src/frontend/committing-modal';
 import SettingsTab from './src/frontend/settings-tab';

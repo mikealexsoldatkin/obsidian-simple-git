@@ -44,7 +44,7 @@ export default class GitWrapper {
 		const shellPath = this.detectShellPath();
 		if (shellPath) parts.push(shellPath);
 
-		let lfsPath = localStorage.getItem('pathGitLFS')?.trim();
+		let lfsPath = localStorage.getItem('additionalPath')?.trim();
 		if (lfsPath) {
 			lfsPath = lfsPath.replace(/[/\\]git-lfs(\.exe)?$/i, '');
 			parts.push(lfsPath);
@@ -89,7 +89,7 @@ export default class GitWrapper {
 			new Notice('Pushing');
 			let message = this.shellExecSync(
 				'git push',
-				localStorage.getItem('pathGitLFS') ?? undefined
+				localStorage.getItem('additionalPath') ?? undefined
 			).trim();
 
 			if (message.length<1) {

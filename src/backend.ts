@@ -7,8 +7,6 @@ export default class Backend {
 	plugin: ObsidianSimpleGitPlugin;
 	basePath: string;
 	gitWrapper: GitWrapper;
-	tasksFolder: string;
-	docsFolder: string;
 
 	public static getInstance(plugin?: ObsidianSimpleGitPlugin) {
 		if (!this._backendSingleton) {
@@ -32,8 +30,6 @@ export default class Backend {
 			new Notice(message);
 			throw new Error(message);
 		}
-		this.tasksFolder = plugin.settings.tasksFolder;
-		this.docsFolder = plugin.settings.docsFolder;
 		this.gitWrapper = new GitWrapper(this.basePath);
 		return this;
 	}
