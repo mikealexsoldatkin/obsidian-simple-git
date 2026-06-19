@@ -4,6 +4,10 @@ import {SimpleGit} from 'simple-git/dist/typings/simple-git';
 import {execSync} from 'child_process';
 import {existsSync} from 'fs';
 
+function errorMessage(error: unknown): string {
+	return error instanceof Error ? error.message : String(error);
+}
+
 export default class GitWrapper {
 	basePath: string;
 	git: SimpleGit;
@@ -78,7 +82,7 @@ export default class GitWrapper {
 			new Notice('Staging all changes');
 			await this.git.add('.');
 		} catch (error) {
-			new Notice('Error while staging: ' + error.message.substring(0, 300));
+			new Notice('Error while staging: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 		}
 	}
@@ -98,7 +102,7 @@ export default class GitWrapper {
 			new Notice(message);
 			console.log(message);
 		} catch (error) {
-			new Notice('Error while pushing: ' + error.message.substring(0, 300));
+			new Notice('Error while pushing: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 		}
 	}
@@ -118,7 +122,7 @@ export default class GitWrapper {
 			new Notice(message);
 			console.log(message);
 		} catch (error) {
-			new Notice('Error while committing: ' + error.message.substring(0, 300));
+			new Notice('Error while committing: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 		}
 	}
@@ -143,7 +147,7 @@ export default class GitWrapper {
 				};
 			});
 		} catch (error) {
-			new Notice('Error while reading status: ' + error.message.substring(0, 300));
+			new Notice('Error while reading status: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 			return [];
 		}
@@ -158,7 +162,7 @@ export default class GitWrapper {
 				await this.git.reset(['--', ...toUnstage]);
 			}
 		} catch (error) {
-			new Notice('Error while staging: ' + error.message.substring(0, 300));
+			new Notice('Error while staging: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 		}
 	}
@@ -168,7 +172,7 @@ export default class GitWrapper {
 			const result = await this.git.branchLocal();
 			return result.all;
 		} catch (error) {
-			new Notice('Error while listing branches: ' + error.message.substring(0, 300));
+			new Notice('Error while listing branches: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 			return [];
 		}
@@ -182,7 +186,7 @@ export default class GitWrapper {
 			new Notice(message);
 			console.log(message);
 		} catch (error) {
-			new Notice('Error while switching branch: ' + error.message.substring(0, 300));
+			new Notice('Error while switching branch: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 		}
 	}
@@ -201,7 +205,7 @@ export default class GitWrapper {
 			new Notice(message);
 			console.log(message);
 		} catch (error) {
-			new Notice('Error while creating a new branch: ' + error.message.substring(0, 300));
+			new Notice('Error while creating a new branch: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 		}
 	}
@@ -227,7 +231,7 @@ export default class GitWrapper {
 			new Notice(message);
 			console.log(message);
 		} catch (error) {
-			new Notice('Error while pulling updates from the remote repository: ' + error.message.substring(0, 300));
+			new Notice('Error while pulling updates from the remote repository: ' + errorMessage(error).substring(0, 300));
 			console.error(error);
 		}
 	}
@@ -257,7 +261,7 @@ export default class GitWrapper {
 		try {
 			return execSync(query, { cwd: this.basePath, env }).toString();
 		} catch (error) {
-			return error.message;
+			return errorMessage(error);
 		}
 	}
 }
