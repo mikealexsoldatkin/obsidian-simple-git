@@ -25,7 +25,7 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 		updateFromBitbucketStatusBarItem.setAttribute("title", "Pull updates from the remote repository");
 		updateFromBitbucketStatusBarItem.classList.add("status-bar-button");
 		updateFromBitbucketStatusBarItem.addEventListener("click", () => {
-			this.backend.gitWrapper.pull().then(() => this.sendGitRefreshEvent());
+			void this.backend.gitWrapper.pull().then(() => this.sendGitRefreshEvent());
 		});
 
 		const createNewBranchStatusBarItem = this.addStatusBarItem();
@@ -34,7 +34,7 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 		createNewBranchStatusBarItem.classList.add("status-bar-button");
 		createNewBranchStatusBarItem.addEventListener("click", () => {
 			new CreatingBranchModal(this.app, (result) => {
-				this.backend.gitWrapper.pullAndCreateBranch(
+				void this.backend.gitWrapper.pullAndCreateBranch(
 					this.backend.getNewBranchName(result.branchType, result.taskCode)
 				).then(() => {
 					this.updateBranchStatusBar();
@@ -51,7 +51,7 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 			new CommittingSettingsModal(this.app, 'Committing changes', "Commit", (result) => {
 				this.backend.saveCommitMessage(result.commitMessage);
 				const staging = this.stageForCommit(result);
-				staging
+				void staging
 					.then(() => this.backend.gitWrapper.commit(result.commitMessage))
 					.then(() => this.sendGitRefreshEvent());
 			}).open();
@@ -65,7 +65,7 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 			new CommittingSettingsModal(this.app, 'Pushing changes', "Push", (result) => {
 				this.backend.saveCommitMessage(result.commitMessage);
 				const staging = this.stageForCommit(result);
-				staging
+				void staging
 					.then(() => this.backend.gitWrapper.commit(result.commitMessage))
 					.then(() => this.backend.gitWrapper.push())
 					.then(() => this.sendGitRefreshEvent());
@@ -76,9 +76,9 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 		this.branchStatusBarItem.setAttribute("title", "Switch branch");
 		this.branchStatusBarItem.classList.add("status-bar-button");
 		this.branchStatusBarItem.addEventListener("click", () => {
-			this.backend.gitWrapper.getBranches().then((branches) => {
+			void this.backend.gitWrapper.getBranches().then((branches) => {
 				new BranchSelectModal(this.app, branches, (branch) => {
-					this.backend.gitWrapper.checkout(branch).then(() => {
+					void this.backend.gitWrapper.checkout(branch).then(() => {
 						this.updateBranchStatusBar();
 						this.sendGitRefreshEvent();
 					});
@@ -119,7 +119,7 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	async sendGitRefreshEvent() {
+	sendGitRefreshEvent() {
 		const GIT_REFRESH_EVENT_NAME =  "obsidian-git:refresh";
 		this.app.workspace.trigger(GIT_REFRESH_EVENT_NAME);
 	}

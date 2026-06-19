@@ -14,8 +14,8 @@ export default class GitWrapper {
 		this.env = this.buildEnv();
 		this.git = simpleGit({ baseDir: basePath });
 		this.git.env(this.env);
-		this.git.addConfig('core.quotepath', 'false');
-		this.git.addConfig('pull.rebase', 'false');
+		void this.git.addConfig('core.quotepath', 'false');
+		void this.git.addConfig('pull.rebase', 'false');
 		this.configureLfs();
 	}
 
@@ -30,10 +30,10 @@ export default class GitWrapper {
 		}
 
 		const q = `"${lfsBin.replace(/\\/g, '/')}"`;
-		this.git.addConfig('filter.lfs.process',  `${q} filter-process`);
-		this.git.addConfig('filter.lfs.clean',    `${q} clean -- %f`);
-		this.git.addConfig('filter.lfs.smudge',   `${q} smudge -- %f`);
-		this.git.addConfig('filter.lfs.required', 'true');
+		void this.git.addConfig('filter.lfs.process',  `${q} filter-process`);
+		void this.git.addConfig('filter.lfs.clean',    `${q} clean -- %f`);
+		void this.git.addConfig('filter.lfs.smudge',   `${q} smudge -- %f`);
+		void this.git.addConfig('filter.lfs.required', 'true');
 	}
 
 	private buildEnv(): NodeJS.ProcessEnv {

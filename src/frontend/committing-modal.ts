@@ -95,7 +95,7 @@ export default class CommittingSettingsModal extends Modal {
 			this.updateTreeVisibility();
 			return;
 		}
-		this.backend.gitWrapper.getStatus().then((files) => {
+		void this.backend.gitWrapper.getStatus().then((files) => {
 			this.allFiles = files.map(file => file.path);
 			this.checkedFiles = new Set(files.filter(file => file.staged).map(file => file.path));
 			this.renderFileTree(files);
