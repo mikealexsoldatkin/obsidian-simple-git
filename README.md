@@ -84,6 +84,10 @@ Copy `main.js`, `styles.css`, and `manifest.json` into `VaultFolder/.obsidian/pl
 - `npm run build` — type-check and produce a production build.
 - `npm version patch | minor | major` — bump the version in `manifest.json` and `package.json` and update `versions.json`.
 
+## How to make a new release
+git tag 1.0.5 && git push origin 1.0.5
+replace 1.0.5 by your own tag
+
 ## License
 
 MIT
