@@ -50,7 +50,7 @@ export default class CreatingBranchModal extends Modal {
 				dropdown
 					.setValue(this.values.branchType)
 					.onChange((value) => {
-						this.values.branchType = value; // Сохраняем выбранное значение
+						this.values.branchType = value;
 					});
 				dropdown.selectEl.addClass("task-type-dropdown");
 			});

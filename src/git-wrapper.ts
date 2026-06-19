@@ -123,13 +123,25 @@ export default class GitWrapper {
 		}
 	}
 
-	public async getStatus(): Promise<{ path: string; staged: boolean }[]> {
+	public async getStatus(): Promise<{ path: string; staged: boolean; status: string }[]> {
 		try {
 			const result = await this.git.status();
-			return result.files.map(file => ({
-				path: file.path,
-				staged: file.index !== ' ' && file.index !== '?'
-			}));
+			return result.files.map(file => {
+				const code = (file.index !== ' ' && file.index !== '?') ? file.index : file.working_dir;
+				let status: string;
+				if (code === 'D') {
+					status = 'D';
+				} else if (code === 'A' || code === '?') {
+					status = 'A';
+				} else {
+					status = 'M';
+				}
+				return {
+					path: file.path,
+					staged: file.index !== ' ' && file.index !== '?',
+					status
+				};
+			});
 		} catch (error) {
 			new Notice('Error while reading status: ' + error.message.substring(0, 300));
 			console.error(error);

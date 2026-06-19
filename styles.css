@@ -33,7 +33,7 @@
 
 .git-file-tree {
 	max-height: 220px;
-	overflow-y: auto;
+	overflow: auto;
 	border: 1px solid var(--background-modifier-border);
 	border-radius: var(--radius-s);
 	padding: 6px 8px;
@@ -43,13 +43,37 @@
 .git-tree-row {
 	display: flex;
 	align-items: center;
-	gap: 6px;
+	gap: 8px;
 	padding: 2px 0;
 }
 
 .git-tree-row input {
 	margin: 0;
 	flex-shrink: 0;
+}
+
+.git-file-status {
+	flex-shrink: 0;
+	width: 1.2em;
+	text-align: center;
+	font-weight: 600;
+	font-family: var(--font-monospace);
+}
+
+.git-file-status-A {
+	color: var(--color-green);
+}
+
+.git-file-status-M {
+	color: var(--color-yellow);
+}
+
+.git-file-status-R {
+	color: var(--color-red);
+}
+
+.git-file-path {
+	white-space: nowrap;
 }
 
 .git-tree-empty {
