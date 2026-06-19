@@ -1,4 +1,4 @@
-import {Notice, Platform} from 'obsidian';
+import {App, Notice, Platform} from 'obsidian';
 import simpleGit from 'simple-git';
 import {SimpleGit} from 'simple-git/dist/typings/simple-git';
 import {execSync} from 'child_process';
@@ -10,11 +10,13 @@ function errorMessage(error: unknown): string {
 
 export default class GitWrapper {
 	basePath: string;
+	app: App;
 	git: SimpleGit;
 	env: NodeJS.ProcessEnv;
 
-	constructor(basePath: string) {
+	constructor(basePath: string, app: App) {
 		this.basePath = basePath;
+		this.app = app;
 		this.env = this.buildEnv();
 		this.git = simpleGit({ baseDir: basePath });
 		this.git.env(this.env);
@@ -47,7 +49,7 @@ export default class GitWrapper {
 		const shellPath = this.detectShellPath();
 		if (shellPath) parts.push(shellPath);
 
-		let lfsPath = localStorage.getItem('additionalPath')?.trim();
+		let lfsPath = this.app.loadLocalStorage('additionalPath')?.trim();
 		if (lfsPath) {
 			lfsPath = lfsPath.replace(/[/\\]git-lfs(\.exe)?$/i, '');
 			parts.push(lfsPath);
@@ -92,7 +94,7 @@ export default class GitWrapper {
 			new Notice('Pushing');
 			let message = this.shellExecSync(
 				'git push',
-				localStorage.getItem('additionalPath') ?? undefined
+				this.app.loadLocalStorage('additionalPath') ?? undefined
 			).trim();
 
 			if (message.length<1) {

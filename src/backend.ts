@@ -30,12 +30,12 @@ export default class Backend {
 			new Notice(message);
 			throw new Error(message);
 		}
-		this.gitWrapper = new GitWrapper(this.basePath);
+		this.gitWrapper = new GitWrapper(this.basePath, plugin.app);
 		return this;
 	}
 
 	public loadCommitMessage() {
-		const message = localStorage.getItem(this.gitWrapper.getBranchNameSync());
+		const message = this.plugin.app.loadLocalStorage(this.gitWrapper.getBranchNameSync());
 		return message ?
 			message :
 			`${this.gitWrapper.getBranchType()}(${this.getTaskNumber()}): `
@@ -46,19 +46,19 @@ export default class Backend {
 	}
 
 	public saveCommitMessage(message: string) {
-		localStorage.setItem(
+		this.plugin.app.saveLocalStorage(
 			this.gitWrapper.getBranchNameSync(),
 			message
 		);
 	}
 
 	public loadAutoStaging() {
-		const value = localStorage.getItem('autoStaging');
+		const value = this.plugin.app.loadLocalStorage('autoStaging');
 		return value === null ? true : value === 'true';
 	}
 
 	public saveAutoStaging(autoStaging: boolean) {
-		localStorage.setItem('autoStaging', String(autoStaging));
+		this.plugin.app.saveLocalStorage('autoStaging', String(autoStaging));
 	}
 
 	public getTaskNumber() {

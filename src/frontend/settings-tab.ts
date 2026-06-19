@@ -100,9 +100,9 @@ export default class SettingsTab extends PluginSettingTab {
 			.setDesc('Additional PATH (optional)')
 			.addText(text => text
 				.setPlaceholder('/opt/homebrew/bin/')
-				.setValue(localStorage.getItem('additionalPath') ?? '')
+				.setValue(this.app.loadLocalStorage('additionalPath') ?? '')
 				.onChange(async (value) => {
-					localStorage.setItem(
+					this.app.saveLocalStorage(
 						'additionalPath',
 						value
 					);
