@@ -1,5 +1,5 @@
 {
-	"id": "simple-git-plugin",
+	"id": "simple-git",
 	"name": "Simple Git",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",

@@ -1,5 +1,5 @@
 {
-	"name": "simple-git-plugin",
+	"name": "simple-git",
 	"version": "1.0.0",
 	"description": "A lightweight and simple git client",
 	"main": "main.js",
