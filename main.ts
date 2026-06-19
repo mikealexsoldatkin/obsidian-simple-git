@@ -100,6 +100,11 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 	}
 
 	updateBranchStatusBar() {
+		if (!this.settings.showCurrentBranch) {
+			this.branchStatusBarItem.style.display = "none";
+			return;
+		}
+		this.branchStatusBarItem.style.display = "";
 		const branch = this.backend.gitWrapper.getBranchNameSync();
 		this.branchStatusBarItem.setText(branch || '(no branch)');
 	}

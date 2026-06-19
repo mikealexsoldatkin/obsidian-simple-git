@@ -91,6 +91,10 @@ export default class CommittingSettingsModal extends Modal {
 	}
 
 	private loadFileTree() {
+		if (!this.backend.plugin.settings.showStagingTreeOnCommittingUI) {
+			this.updateTreeVisibility();
+			return;
+		}
 		this.backend.gitWrapper.getStatus().then((files) => {
 			this.allFiles = files.map(file => file.path);
 			this.checkedFiles = new Set(files.filter(file => file.staged).map(file => file.path));
@@ -134,7 +138,8 @@ export default class CommittingSettingsModal extends Modal {
 		if (!this.treeContainer) {
 			return;
 		}
-		this.treeContainer.style.display = this.values.autoStaging ? "none" : "";
+		const show = this.backend.plugin.settings.showStagingTreeOnCommittingUI && !this.values.autoStaging;
+		this.treeContainer.style.display = show ? "" : "none";
 	}
 
 	validate() {

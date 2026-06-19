@@ -8,12 +8,16 @@ export interface BranchTypeOption {
 
 export interface ObsidianSimpleGitPluginSettingsInterface {
 	branchTypes: BranchTypeOption[];
+	showCurrentBranch: boolean;
+	showStagingTreeOnCommittingUI: boolean;
 }
 
 export const DEFAULT_SETTINGS: ObsidianSimpleGitPluginSettingsInterface = {
 	branchTypes: [
 		{ value: 'docs', label: 'Documentation' },
 	],
+	showCurrentBranch: true,
+	showStagingTreeOnCommittingUI: true,
 }
 
 export default class SettingsTab extends PluginSettingTab {
@@ -27,6 +31,29 @@ export default class SettingsTab extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
+
+		new Setting(containerEl).setName('Features').setHeading();
+
+		new Setting(containerEl)
+			.setName('Show current branch')
+			.setDesc('Display the current branch name in the status bar')
+			.addToggle(toggle => toggle
+				.setValue(this.plugin.settings.showCurrentBranch)
+				.onChange(async (value) => {
+					this.plugin.settings.showCurrentBranch = value;
+					await this.plugin.saveSettings();
+					this.plugin.updateBranchStatusBar();
+				}));
+
+		new Setting(containerEl)
+			.setName('Show staging file tree')
+			.setDesc('Show the tree of changed files in the commit window when auto staging is off')
+			.addToggle(toggle => toggle
+				.setValue(this.plugin.settings.showStagingTreeOnCommittingUI)
+				.onChange(async (value) => {
+					this.plugin.settings.showStagingTreeOnCommittingUI = value;
+					await this.plugin.saveSettings();
+				}));
 
 		new Setting(containerEl).setName('Branch types').setHeading();
 
