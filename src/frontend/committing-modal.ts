@@ -62,7 +62,7 @@ export default class CommittingSettingsModal extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName("Changes")
+			.setName("Commit Message")
 			.addTextArea((textarea) =>
 				textarea
 					.setPlaceholder(this.values.commitMessage)
