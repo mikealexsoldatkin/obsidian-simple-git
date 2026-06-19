@@ -2,7 +2,6 @@ import {App, Notice, Platform} from 'obsidian';
 import simpleGit from 'simple-git';
 import {SimpleGit} from 'simple-git/dist/typings/simple-git';
 import {execSync} from 'child_process';
-import {existsSync} from 'fs';
 
 function errorMessage(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
@@ -27,11 +26,15 @@ export default class GitWrapper {
 
 	private configureLfs(): void {
 		const whichCmd = Platform.isWin ? 'where git-lfs' : 'which git-lfs';
-		const out = this.shellExecSync(whichCmd).trim();
+		const out = this.shellExecSyncOrNull(whichCmd);
+
+		// A failed lookup means git-lfs is not installed: bail out without configuring it.
+		if (out === null) {
+			return;
+		}
 
 		const lfsBin = (out.split(/\r?\n/)[0] ?? '').trim().replace(/\/{2,}/g, '/');
-
-		if (!lfsBin || !existsSync(lfsBin)) {
+		if (!lfsBin) {
 			return;
 		}
 
@@ -264,6 +267,18 @@ export default class GitWrapper {
 			return execSync(query, { cwd: this.basePath, env }).toString();
 		} catch (error) {
 			return errorMessage(error);
+		}
+	}
+
+	private shellExecSyncOrNull(query: string, newPath?: string): string | null {
+		const sep = Platform.isWin ? ';' : ':';
+		const env = newPath
+			? { ...this.env, PATH: `${this.env.PATH}${sep}${newPath}` }
+			: this.env;
+		try {
+			return execSync(query, { cwd: this.basePath, env }).toString();
+		} catch {
+			return null;
 		}
 	}
 }
