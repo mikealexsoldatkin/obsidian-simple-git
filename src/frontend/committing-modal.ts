@@ -49,6 +49,7 @@ export default class CommittingSettingsModal extends Modal {
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.values.autoStaging)
+					.setDisabled(true)
 					.onChange((value) => {
 						this.values.autoStaging = value;
 						this.backend.saveAutoStaging(value);
