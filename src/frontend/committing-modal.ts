@@ -61,7 +61,6 @@ export default class CommittingSettingsModal extends Modal {
 					.setButtonText(this.submitButtonName)
 					.setCta()
 					.onClick(() => {
-						this.validate();
 						if (this.validate().isValid) {
 							this.close();
 							this.onSubmit(this.values);

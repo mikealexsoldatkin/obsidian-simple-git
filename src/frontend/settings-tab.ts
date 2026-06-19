@@ -29,7 +29,7 @@ export default class SettingsTab extends PluginSettingTab {
 				.setValue(localStorage.getItem('additionalPath') ?? '')
 				.onChange(async (value) => {
 					localStorage.setItem(
-						'pathGitLFS',
+						'additionalPath',
 						value
 					);
 				}));

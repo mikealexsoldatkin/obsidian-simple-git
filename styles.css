@@ -19,13 +19,6 @@
 	width: 300px;
 }
 
-.task-description-input {
-	min-width: 300px;
-	width: 300px;
-	height: 100px;
-	resize: none;
-}
-
 .commit-description-input {
 	min-width: 425px;
 	width: 425px;

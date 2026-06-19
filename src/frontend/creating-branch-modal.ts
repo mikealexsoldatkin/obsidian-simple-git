@@ -64,7 +64,6 @@ export default class CreatingBranchModal extends Modal {
 					.setButtonText("Create")
 					.setCta()
 					.onClick(() => {
-						this.validate();
 						if (this.validate().isValid) {
 							this.close();
 							this.onSubmit(this.values);
