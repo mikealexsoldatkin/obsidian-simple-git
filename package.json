@@ -1,6 +1,6 @@
 {
-	"name": "obsidian-simple-git-plugin",
-	"version": "1.0.0",
+	"name": "simple-git-plugin",
+	"version": "1.0.1",
 	"description": "A lightweight and simple git client",
 	"main": "main.js",
 	"scripts": {

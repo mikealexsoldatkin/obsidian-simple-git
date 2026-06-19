@@ -76,7 +76,7 @@ On startup the plugin detects `git-lfs` and configures the LFS filters automatic
 
 ### Manual
 
-Copy `main.js`, `styles.css`, and `manifest.json` into `VaultFolder/.obsidian/plugins/obsidian-simple-git-plugin/`, then reload Obsidian and enable the plugin.
+Copy `main.js`, `styles.css`, and `manifest.json` into `VaultFolder/.obsidian/plugins/simple-git-plugin/`, then reload Obsidian and enable the plugin.
 
 ## Development
 
