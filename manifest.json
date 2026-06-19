@@ -1,0 +1,11 @@
+{
+	"id": "obsidian-simple-git-plugin",
+	"name": "Obsidian Simple Git Plugin",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "A lightweight and simple git client",
+	"author": "Mikhail Soldatkin",
+	"authorUrl": "https://t.me/mikealexsoldatkin",
+	"fundingUrl": "https://t.me/mikealexsoldatkin",
+	"isDesktopOnly": true
+}
