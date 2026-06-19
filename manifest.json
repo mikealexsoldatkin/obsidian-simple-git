@@ -1,8 +1,8 @@
 {
 	"id": "simple-git",
 	"name": "Simple Git",
-	"version": "1.0.1",
-	"minAppVersion": "0.9.16",
+	"version": "1.0.2",
+	"minAppVersion": "1.0.0",
 	"description": "A lightweight and simple git client.",
 	"author": "Mikhail Soldatkin",
 	"authorUrl": "https://t.me/mikealexsoldatkin",
