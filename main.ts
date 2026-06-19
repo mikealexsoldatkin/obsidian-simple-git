@@ -1,4 +1,4 @@
-import {Plugin} from 'obsidian';
+import {Plugin, TFile} from 'obsidian';
 import CreatingBranchModal from './src/frontend/creating-branch-modal';
 import CommittingSettingsModal, {CommittingSettingsInterface} from './src/frontend/committing-modal';
 import SettingsTab from './src/frontend/settings-tab';
@@ -16,6 +16,14 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 		this.backend = Backend.getInstance(this);
 
 		this.addSettingTab(new SettingsTab(this.app, this));
+
+		this.registerEvent(
+			this.app.vault.on("modify", (file) => {
+				if (file instanceof TFile) {
+					this.sendGitRefreshEvent();
+				}
+			})
+		);
 
 		const gitLeftStatusBarItem = this.addStatusBarItem();
 		gitLeftStatusBarItem.setText('Git actions:');
