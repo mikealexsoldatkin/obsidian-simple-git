@@ -73,7 +73,7 @@ export default class SettingsTab extends PluginSettingTab {
 						this.plugin.settings.branchTypes[index].label = value;
 						await this.plugin.saveSettings();
 					}))
-				.addExtraButton(button => button
+				.addButton(button => button
 					.setIcon('trash')
 					.setTooltip('Remove branch type')
 					.onClick(async () => {
