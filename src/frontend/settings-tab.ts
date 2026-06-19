@@ -12,10 +12,7 @@ export interface ObsidianSimpleGitPluginSettingsInterface {
 
 export const DEFAULT_SETTINGS: ObsidianSimpleGitPluginSettingsInterface = {
 	branchTypes: [
-		{ value: 'feature', label: 'New functionality' },
 		{ value: 'docs', label: 'Documentation' },
-		{ value: 'release', label: 'Release preparation' },
-		{ value: 'hotfix', label: 'Urgent production fix' },
 	],
 }
 
