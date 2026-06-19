@@ -26,7 +26,6 @@ export default class GitWrapper {
 		const lfsBin = (out.split(/\r?\n/)[0] ?? '').trim().replace(/\/{2,}/g, '/');
 
 		if (!lfsBin || !existsSync(lfsBin)) {
-			console.warn('git-lfs не найден', out);
 			return;
 		}
 
