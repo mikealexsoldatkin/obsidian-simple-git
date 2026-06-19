@@ -4,10 +4,12 @@ import CommittingSettingsModal from './src/frontend/committing-modal';
 import SettingsTab from './src/frontend/settings-tab';
 import {ObsidianSimpleGitPluginSettingsInterface, DEFAULT_SETTINGS} from './src/frontend/settings-tab';
 import Backend from './src/backend';
+import BranchSelectModal from './src/frontend/branch-select-modal';
 
 export default class ObsidianSimpleGitPlugin extends Plugin {
 	settings: ObsidianSimpleGitPluginSettingsInterface;
 	backend: Backend;
+	branchStatusBarItem: HTMLElement;
 
 	async onload() {
 		await this.loadSettings();
@@ -34,7 +36,10 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 			new CreatingBranchModal(this.app, (result) => {
 				this.backend.gitWrapper.pullAndCreateBranch(
 					this.backend.getNewBranchName(result.branchType, result.taskCode)
-				).then(() => this.sendGitRefreshEvent());
+				).then(() => {
+					this.updateBranchStatusBar();
+					this.sendGitRefreshEvent();
+				});
 			}).open();
 		});
 
@@ -67,8 +72,28 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 			}).open();
 		});
 
+		this.branchStatusBarItem = this.addStatusBarItem();
+		this.branchStatusBarItem.setAttribute("title", "Switch branch");
+		this.branchStatusBarItem.classList.add("status-bar-button");
+		this.branchStatusBarItem.addEventListener("click", () => {
+			this.backend.gitWrapper.getBranches().then((branches) => {
+				new BranchSelectModal(this.app, branches, (branch) => {
+					this.backend.gitWrapper.checkout(branch).then(() => {
+						this.updateBranchStatusBar();
+						this.sendGitRefreshEvent();
+					});
+				}).open();
+			});
+		});
+		this.updateBranchStatusBar();
+
 		const gitRightStatusBarItem = this.addStatusBarItem();
 		gitRightStatusBarItem.setText('   ');
+	}
+
+	updateBranchStatusBar() {
+		const branch = this.backend.gitWrapper.getBranchNameSync();
+		this.branchStatusBarItem.setText(branch || '(no branch)');
 	}
 
 	onunload() {

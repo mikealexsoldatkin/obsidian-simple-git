@@ -123,6 +123,30 @@ export default class GitWrapper {
 		}
 	}
 
+	public async getBranches(): Promise<string[]> {
+		try {
+			const result = await this.git.branchLocal();
+			return result.all;
+		} catch (error) {
+			new Notice('Error while listing branches: ' + error.message.substring(0, 300));
+			console.error(error);
+			return [];
+		}
+	}
+
+	public async checkout(branchName: string): Promise<void> {
+		try {
+			new Notice('Switching to branch: ' + branchName);
+			await this.git.checkout(branchName);
+			const message = 'Switched to branch: ';
+			new Notice(message);
+			console.log(message);
+		} catch (error) {
+			new Notice('Error while switching branch: ' + error.message.substring(0, 300));
+			console.error(error);
+		}
+	}
+
 	public async pullAndCreateBranch(branchName: string): Promise<void> {
 		await this.pull();
 		await this.createBranch(branchName);
