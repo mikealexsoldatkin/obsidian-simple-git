@@ -29,6 +29,10 @@ export default class SettingsTab extends PluginSettingTab {
 	}
 
 	display(): void {
+		this.renderSettings();
+	}
+
+	private renderSettings(): void {
 		const {containerEl} = this;
 		containerEl.empty();
 
@@ -79,7 +83,7 @@ export default class SettingsTab extends PluginSettingTab {
 					.onClick(async () => {
 						this.plugin.settings.branchTypes.splice(index, 1);
 						await this.plugin.saveSettings();
-						this.display();
+						this.renderSettings();
 					}));
 		});
 
@@ -90,7 +94,7 @@ export default class SettingsTab extends PluginSettingTab {
 				.onClick(async () => {
 					this.plugin.settings.branchTypes.push({ value: '', label: '' });
 					await this.plugin.saveSettings();
-					this.display();
+					this.renderSettings();
 				}));
 
 		new Setting(containerEl).setName('Environment').setHeading();
