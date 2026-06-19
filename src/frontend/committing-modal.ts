@@ -37,7 +37,24 @@ export default class CommittingSettingsModal extends Modal {
 
 	onOpen() {
 		const { contentEl } = this;
+		this.modalEl.addClass("git-commit-modal");
 		contentEl.createEl("h1", { text: this.title });
+
+
+		new Setting(contentEl)
+			.setName("Commit Message")
+			.addTextArea((textarea) =>
+				textarea
+					.setPlaceholder(this.values.commitMessage)
+					.setValue(this.values.commitMessage)
+					.onChange((value) => {
+						this.values.commitMessage = value;
+					})
+					.inputEl.addClass("commit-description-input")
+			);
+
+
+		contentEl.createEl("h6", { text: "" });
 
 		new Setting(contentEl)
 			.setName("Auto staging")
@@ -50,18 +67,6 @@ export default class CommittingSettingsModal extends Modal {
 						this.backend.saveAutoStaging(value);
 						this.updateTreeVisibility();
 					})
-			);
-
-		new Setting(contentEl)
-			.setName("Commit Message")
-			.addTextArea((textarea) =>
-				textarea
-					.setPlaceholder(this.values.commitMessage)
-					.setValue(this.values.commitMessage)
-					.onChange((value) => {
-						this.values.commitMessage = value;
-					})
-					.inputEl.addClass("commit-description-input")
 			);
 
 		this.treeContainer = contentEl.createDiv();
@@ -111,8 +116,9 @@ export default class CommittingSettingsModal extends Modal {
 			const row = treeEl.createDiv({ cls: "git-tree-row" });
 			const checkbox = row.createEl("input", { type: "checkbox" });
 			checkbox.checked = this.checkedFiles.has(file.path);
+			row.createSpan({ text: `[${file.status}] `, cls: `git-file-status git-file-status-${file.status}` });
+			row.createSpan({ text: ` `});
 			row.createSpan({ text: file.path, cls: "git-file-path" });
-			row.createSpan({ text: ` [${file.status}]`, cls: `git-file-status git-file-status-${file.status}` });
 
 			checkbox.addEventListener("change", () => {
 				if (checkbox.checked) {
