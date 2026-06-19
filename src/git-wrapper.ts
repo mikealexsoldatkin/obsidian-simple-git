@@ -123,6 +123,34 @@ export default class GitWrapper {
 		}
 	}
 
+	public async getStatus(): Promise<{ path: string; staged: boolean }[]> {
+		try {
+			const result = await this.git.status();
+			return result.files.map(file => ({
+				path: file.path,
+				staged: file.index !== ' ' && file.index !== '?'
+			}));
+		} catch (error) {
+			new Notice('Error while reading status: ' + error.message.substring(0, 300));
+			console.error(error);
+			return [];
+		}
+	}
+
+	public async setStaged(toStage: string[], toUnstage: string[]): Promise<void> {
+		try {
+			if (toStage.length) {
+				await this.git.add(toStage);
+			}
+			if (toUnstage.length) {
+				await this.git.reset(['--', ...toUnstage]);
+			}
+		} catch (error) {
+			new Notice('Error while staging: ' + error.message.substring(0, 300));
+			console.error(error);
+		}
+	}
+
 	public async getBranches(): Promise<string[]> {
 		try {
 			const result = await this.git.branchLocal();

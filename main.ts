@@ -1,6 +1,6 @@
 import {Plugin} from 'obsidian';
 import CreatingBranchModal from './src/frontend/creating-branch-modal';
-import CommittingSettingsModal from './src/frontend/committing-modal';
+import CommittingSettingsModal, {CommittingSettingsInterface} from './src/frontend/committing-modal';
 import SettingsTab from './src/frontend/settings-tab';
 import {ObsidianSimpleGitPluginSettingsInterface, DEFAULT_SETTINGS} from './src/frontend/settings-tab';
 import Backend from './src/backend';
@@ -50,7 +50,7 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 		commitChangesStatusBarItem.addEventListener("click", () => {
 			new CommittingSettingsModal(this.app, 'Committing changes', "Commit", (result) => {
 				this.backend.saveCommitMessage(result.commitMessage);
-				const staging = result.autoStaging ? this.backend.gitWrapper.stageAll() : Promise.resolve();
+				const staging = this.stageForCommit(result);
 				staging
 					.then(() => this.backend.gitWrapper.commit(result.commitMessage))
 					.then(() => this.sendGitRefreshEvent());
@@ -64,7 +64,7 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 		uploadToBitbucketStatusBarItem.addEventListener("click", () => {
 			new CommittingSettingsModal(this.app, 'Pushing changes', "Push", (result) => {
 				this.backend.saveCommitMessage(result.commitMessage);
-				const staging = result.autoStaging ? this.backend.gitWrapper.stageAll() : Promise.resolve();
+				const staging = this.stageForCommit(result);
 				staging
 					.then(() => this.backend.gitWrapper.commit(result.commitMessage))
 					.then(() => this.backend.gitWrapper.push())
@@ -89,6 +89,14 @@ export default class ObsidianSimpleGitPlugin extends Plugin {
 
 		const gitRightStatusBarItem = this.addStatusBarItem();
 		gitRightStatusBarItem.setText('   ');
+	}
+
+	stageForCommit(result: CommittingSettingsInterface): Promise<void> {
+		if (result.autoStaging) {
+			return this.backend.gitWrapper.stageAll();
+		}
+		const toUnstage = result.files.filter(file => !result.selectedFiles.includes(file));
+		return this.backend.gitWrapper.setStaged(result.selectedFiles, toUnstage);
 	}
 
 	updateBranchStatusBar() {

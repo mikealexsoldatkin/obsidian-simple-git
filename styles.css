@@ -30,3 +30,29 @@
 	min-width: 300px;
 	width: 300px;
 }
+
+.git-file-tree {
+	max-height: 220px;
+	overflow-y: auto;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	padding: 6px 8px;
+	margin-bottom: 12px;
+}
+
+.git-tree-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 0;
+}
+
+.git-tree-row input {
+	margin: 0;
+	flex-shrink: 0;
+}
+
+.git-tree-empty {
+	color: var(--text-muted);
+	padding: 6px 0 12px;
+}
